@@ -39,11 +39,6 @@ func ImprimeArvore(node Node) {
 	fmt.Print("\n")
 }
 
-func CriaNode(esquerda, direita *Node, valor string) (node *Node) {
-	node = &Node{esquerda: esquerda, direita: direita, valor: valor}
-	return
-}
-
 func InsereValorNaArvore(node *Node, valor string) *Node {
 	if node == nil {
 		node = &Node{nil, nil, valor}
