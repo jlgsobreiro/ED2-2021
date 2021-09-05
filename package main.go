@@ -6,7 +6,7 @@ import (
 
 type Node struct {
 	esquerda, direita *Node
-	valor             string
+	valor             int
 }
 
 func Largura(node Node) (largD, largE int) {
@@ -39,16 +39,16 @@ func ImprimeArvore(node Node) {
 	fmt.Print("\n")
 }
 
-func InsereValorNaArvore(node *Node, valor string) *Node {
+func InsereValorNaArvore(node *Node, valor int) *Node {
 	if node == nil {
 		node = &Node{nil, nil, valor}
-	} else if node.valor == "" {
+	} else if node.valor == 0 {
 		node.valor = valor
 	} else {
-		if node.valor < valor {
+		if node.valor > valor {
 			node.esquerda = InsereValorNaArvore(node.esquerda, valor)
 
-		} else if node.valor > valor {
+		} else if node.valor < valor {
 			node.direita = InsereValorNaArvore(node.direita, valor)
 		} else {
 			fmt.Print("Valor já existe\n")
@@ -57,11 +57,14 @@ func InsereValorNaArvore(node *Node, valor string) *Node {
 	return node
 }
 
-func ProcuraValorNaArvore(node *Node, valor string) *Node {
+func ProcuraValorNaArvore(node *Node, valor int) *Node {
+	if node == nil {
+		return nil
+	}
 	if node.valor == valor {
 		return node
 	} else {
-		if node.valor < valor {
+		if node.valor > valor {
 			resp := ProcuraValorNaArvore(node.esquerda, valor)
 			if resp.valor == valor {
 				return resp
@@ -76,34 +79,47 @@ func ProcuraValorNaArvore(node *Node, valor string) *Node {
 	return nil
 }
 
+func ProcuraPaiDeValorNaArvore(node *Node, valor int) *Node {
+
+	if node == nil {
+		return nil
+	}
+	if node.valor == valor {
+		return node
+	}
+	if node.esquerda != nil {
+		if node.esquerda.valor == valor {
+			return node
+		}
+	}
+	if node.direita != nil {
+		if node.direita.valor == valor {
+			return node
+		}
+	}
+	if node.valor > valor {
+		resp := ProcuraPaiDeValorNaArvore(node.esquerda, valor)
+		if resp.esquerda.valor == valor {
+			return resp
+		}
+	} else {
+		resp := ProcuraPaiDeValorNaArvore(node.direita, valor)
+		if resp.direita.valor == valor {
+			return resp
+		}
+	}
+	return nil
+}
+
 func main() {
-	raiz := Node{nil, nil, ""}
-	InsereValorNaArvore(&raiz, "c")
-	InsereValorNaArvore(&raiz, "d")
-	InsereValorNaArvore(&raiz, "e")
-	InsereValorNaArvore(&raiz, "f")
-	InsereValorNaArvore(&raiz, "m")
-	InsereValorNaArvore(&raiz, "n")
-	InsereValorNaArvore(&raiz, "o")
-	InsereValorNaArvore(&raiz, "g")
-	InsereValorNaArvore(&raiz, "h")
-	InsereValorNaArvore(&raiz, "w")
-	InsereValorNaArvore(&raiz, "x")
-	InsereValorNaArvore(&raiz, "i")
-	InsereValorNaArvore(&raiz, "j")
-	InsereValorNaArvore(&raiz, "k")
-	InsereValorNaArvore(&raiz, "l")
-	InsereValorNaArvore(&raiz, "p")
-	InsereValorNaArvore(&raiz, "q")
-	InsereValorNaArvore(&raiz, "r")
-	InsereValorNaArvore(&raiz, "s")
-	InsereValorNaArvore(&raiz, "t")
-	InsereValorNaArvore(&raiz, "u")
-	InsereValorNaArvore(&raiz, "v")
-	InsereValorNaArvore(&raiz, "a")
-	InsereValorNaArvore(&raiz, "b")
-	InsereValorNaArvore(&raiz, "y")
-	InsereValorNaArvore(&raiz, "z")
+	raiz := Node{nil, nil, 0}
+	InsereValorNaArvore(&raiz, 10)
+	InsereValorNaArvore(&raiz, 5)
+	InsereValorNaArvore(&raiz, 15)
+	InsereValorNaArvore(&raiz, 3)
+	InsereValorNaArvore(&raiz, 7)
+	InsereValorNaArvore(&raiz, 11)
+	InsereValorNaArvore(&raiz, 18)
 
 	/*item111 := Node{nil, nil, 111}
 	item221 := Node{nil, nil, 221}
@@ -120,6 +136,6 @@ func main() {
 	fmt.Println(Largura(raiz))
 	fmt.Print(raiz)
 	ImprimeArvore(raiz)
-	fmt.Print(ProcuraValorNaArvore(&raiz, "q"))
-
+	fmt.Print(ProcuraValorNaArvore(&raiz, 5))
+	fmt.Print(ProcuraPaiDeValorNaArvore(&raiz, 3))
 }
